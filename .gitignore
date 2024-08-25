@@ -31,7 +31,7 @@ minio_data/
 # Logs
 logs/
 *.log
-
+*.crt
 # OS generated files
 .DS_Store
 Thumbs.db
