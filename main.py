@@ -68,7 +68,7 @@ async def text_message_handler(
 async def audio_message_handler(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> None:
-    domain = "https://192.168.156.6"
+    domain = "https://cream-api"
 
     sender_id = update.message.from_user.id
     if sender_id != BOT_SUPERADMIN_ID:
@@ -80,29 +80,56 @@ async def audio_message_handler(
         [local_file_path, file_name] = await TgBotHelpers.download_audio_file(
             update=update, context=context
         )
+        login_response = requests.post(
+            f"{domain}/api/v1/login",
+            json={"email": "gombovombo@gmail.com", "password": "pepe"},
+            headers={
+                "Accept": "application/json",
+                "Referer": "cream-tg",
+                # "Authorization": "Bearer 3|XCdqxFeD8t3FfPtO2W4co4gPpobL72nd1d8jyWkz460118e7",
+            },
+            verify=False,
+        )
 
-        with open(local_file_path, "rb") as file:
-            files = {"file": ("audio.mp3", file)}
+        print(login_response)
 
-            response = requests.post(
-                f"{domain}/api/v1/tracks",
-                headers={
-                    "Accept": "application/json",
-                    # "Authorization": "Bearer 3|XCdqxFeD8t3FfPtO2W4co4gPpobL72nd1d8jyWkz460118e7",
-                },
-                files=files,
-                verify=False,
-            )
+        # with open(local_file_path, "rb") as file:
+        #     files = {"file": ("audio.mp3", file)}
+        #     response = requests.get(f"{domain}/api/test", verify=False)
+        #     print(response)
+        #     response = requests.post(
+        #         f"{domain}/api/v1/tracks",
+        #         headers={
+        #             "Accept": "application/json",
+        #             # "Authorization": "Bearer 3|XCdqxFeD8t3FfPtO2W4co4gPpobL72nd1d8jyWkz460118e7",
+        #         },
+        #         files=files,
+        #         verify=False,
+        #     )
 
-            os.remove(local_file_path)
+        #     if response.status_code == 401:
 
-            if response.status_code == 200:
-                await update.message.reply_text("Audio has been uploaded.")
-            else:
-                await update.message.reply_text("Error when uploading file")
-                logger.error(
-                    f"Upload failed with status {response.status_code}: {response.text}"
-                )
+        #         if login_response.status_code == 200:
+        #             token = login_response.json().get("token")
+        #             response = requests.post(
+        #                 f"{domain}/api/v1/tracks",
+        #                 headers={
+        #                     "Accept": "application/json",
+        #                     "Authorization": f"Bearer {token}",
+        #                 },
+        #                 files=files,
+        #                 verify=False,
+        #             )
+
+        #     os.remove(local_file_path)
+
+        #     if response.status_code == 200:
+        #         await update.message.reply_text("Audio has been uploaded.")
+        #     else:
+        #         await update.message.reply_text("Error when uploading file")
+        #         logger.error(
+        #             f"Upload failed with status {response.status_code}: {response.text}"
+        #         )
     except Exception as e:
         logger.error(f"Error occurred: {str(e)}")
         await update.message.reply_text(f"Error when uploading file {str(e)}")
