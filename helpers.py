@@ -18,6 +18,8 @@ class TgBotHelpers:
         audio = update.message.audio
         file_id = audio.file_id
 
+        file_name = audio.file_name if audio.file_name else "audio"
+
         # Resolve the directory of the current script
         current_dir = Path(__file__).resolve().parent
         downloads_dir = current_dir / "downloads"
@@ -26,7 +28,8 @@ class TgBotHelpers:
         # Get file information from Telegram
         file_info = await context.bot.get_file(file_id)
         download_url = file_info.file_path
-        file_name = Path(urlparse(download_url).path).name
+        file_extension = Path(urlparse(download_url).path).suffix
+        # file_name = f"{title}{file_extension}"
 
         # Construct the full file path
         local_file_path = downloads_dir / file_name

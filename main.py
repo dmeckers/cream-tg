@@ -80,62 +80,40 @@ async def audio_message_handler(
         [local_file_path, file_name] = await TgBotHelpers.download_audio_file(
             update=update, context=context
         )
-        login_response = requests.post(
-            f"{domain}/api/v1/login",
-            json={"email": "gombovombo@gmail.com", "password": "pepe"},
-            headers={
-                "Accept": "application/json",
-                "Referer": "cream-tg",
-                # "Authorization": "Bearer 3|XCdqxFeD8t3FfPtO2W4co4gPpobL72nd1d8jyWkz460118e7",
-            },
-            verify=False,
-        )
 
-        print(login_response)
+        with open(local_file_path, "rb") as file:
+            files = {"file": (file_name, file)}
+            response = requests.get(f"{domain}/api/test", verify=False)
+            print(response)
+            response = requests.post(
+                f"{domain}/api/v1/tracks",
+                headers={
+                    "Accept": "application/json",
+                    "Authorization": f"Bearer {os.getenv('JWT_TOKEN')}",
+                },
+                files=files,
+                verify=False,
+            )
 
-        # with open(local_file_path, "rb") as file:
-        #     files = {"file": ("audio.mp3", file)}
-        #     response = requests.get(f"{domain}/api/test", verify=False)
-        #     print(response)
-        #     response = requests.post(
-        #         f"{domain}/api/v1/tracks",
-        #         headers={
-        #             "Accept": "application/json",
-        #             # "Authorization": "Bearer 3|XCdqxFeD8t3FfPtO2W4co4gPpobL72nd1d8jyWkz460118e7",
-        #         },
-        #         files=files,
-        #         verify=False,
-        #     )
+            os.remove(local_file_path)
 
-        #     if response.status_code == 401:
-
-        #         if login_response.status_code == 200:
-        #             token = login_response.json().get("token")
-        #             response = requests.post(
-        #                 f"{domain}/api/v1/tracks",
-        #                 headers={
-        #                     "Accept": "application/json",
-        #                     "Authorization": f"Bearer {token}",
-        #                 },
-        #                 files=files,
-        #                 verify=False,
-        #             )
-
-        #     os.remove(local_file_path)
-
-        #     if response.status_code == 200:
-        #         await update.message.reply_text("Audio has been uploaded.")
-        #     else:
-        #         await update.message.reply_text("Error when uploading file")
-        #         logger.error(
-        #             f"Upload failed with status {response.status_code}: {response.text}"
-        #         )
+            if response.status_code == 201:
+                await update.message.reply_text("Audio has been uploaded.")
+            else:
+                await update.message.reply_text("Error when uploading file")
+                logger.error(
+                    f"Upload failed with status {response.status_code}: {response.text}"
+                )
     except Exception as e:
         logger.error(f"Error occurred: {str(e)}")
         await update.message.reply_text(f"Error when uploading file {str(e)}")
 
 
 def main() -> None:
+
+    if not os.getenv("JWT_TOKEN"):
+        raise Exception("JWT_TOKEN is not set")
+
     application = ApplicationBuilder().token(TOKEN).build()
 
     application.add_handler(
