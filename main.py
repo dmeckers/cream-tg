@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 # Environment variables
 TOKEN = os.getenv("BOT_TOKEN", "too sad for you :(")
-WEB_APP_URL = os.getenv("WEB_APP_URL", "https://dmeckers.github.io/cream-fm-bot-app/")
+WEB_APP_URL = os.getenv("WEB_APP_URL", "https://dmeckers.github.io/cream-front/")
 BOT_SUPERADMIN_ID = int(os.getenv("BOT_SUPERADMIN_ID", 0))
 
 # Global variables
