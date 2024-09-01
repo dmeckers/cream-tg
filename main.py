@@ -83,8 +83,7 @@ async def audio_message_handler(
 
         with open(local_file_path, "rb") as file:
             files = {"file": (file_name, file)}
-            response = requests.get(f"{domain}/api/test", verify=False)
-            print(response)
+
             response = requests.post(
                 f"{domain}/api/v1/tracks",
                 headers={
