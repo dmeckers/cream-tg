@@ -53,11 +53,7 @@ async def text_message_handler(
         return
 
     await update.message.reply_text(
-        "Wassup ma nigga, hope u doin good. I'm just a fucking piece of hardcoded message. Hit the button below to open the radio."
-    )
-
-    await update.message.reply_text(
-        "Welcome",
+        "Wassup ma nigga, hope u doin good. I'm just a fucking piece of hardcoded message. Hit the button below to open the radio.",
         reply_markup=ReplyKeyboardMarkup(
             [[KeyboardButton("Open Web App", web_app=WebAppInfo(WEB_APP_URL))]],
             resize_keyboard=True,
@@ -69,6 +65,21 @@ async def audio_message_handler(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> None:
     domain = "https://cream-api"
+
+    await update.message.reply_text(
+        "Welcome",
+        reply_markup=ReplyKeyboardMarkup(
+            [
+                [
+                    KeyboardButton(
+                        "Open Web App",
+                        web_app=WebAppInfo("https://dmeckers.github.io/cream-front/"),
+                    )
+                ]
+            ],
+            resize_keyboard=True,
+        ),
+    )
 
     sender_id = update.message.from_user.id
     if sender_id != BOT_SUPERADMIN_ID:
