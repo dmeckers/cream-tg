@@ -29,6 +29,23 @@ BOT_SUPERADMIN_ID = int(os.getenv("BOT_SUPERADMIN_ID", 0))
 stations = ["cream"]
 
 
+async def start_command_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "Welcome",
+        reply_markup=ReplyKeyboardMarkup(
+            [
+                [
+                    KeyboardButton(
+                        "Open Web App",
+                        web_app=WebAppInfo(WEB_APP_URL),
+                    )
+                ]
+            ],
+            resize_keyboard=True,
+        ),
+    )
+
+
 # Handlers
 async def text_message_handler(
     update: Update, context: ContextTypes.DEFAULT_TYPE
@@ -65,21 +82,6 @@ async def audio_message_handler(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> None:
     domain = "https://cream-api"
-
-    await update.message.reply_text(
-        "Welcome",
-        reply_markup=ReplyKeyboardMarkup(
-            [
-                [
-                    KeyboardButton(
-                        "Open Web App",
-                        web_app=WebAppInfo("https://dmeckers.github.io/cream-front/"),
-                    )
-                ]
-            ],
-            resize_keyboard=True,
-        ),
-    )
 
     sender_id = update.message.from_user.id
     if sender_id != BOT_SUPERADMIN_ID:
@@ -130,6 +132,7 @@ def main() -> None:
         MessageHandler(filters.TEXT & ~filters.COMMAND, text_message_handler)
     )
     application.add_handler(MessageHandler(filters.AUDIO, audio_message_handler))
+    application.add_handler(CommandHandler("start", start_command_handler))
 
     application.run_polling()
 
