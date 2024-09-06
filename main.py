@@ -17,7 +17,7 @@ import re
 # Logging
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-)
+
 logger = logging.getLogger(__name__)
 
 # Environment variables
@@ -27,7 +27,6 @@ BOT_SUPERADMIN_ID = int(os.getenv("BOT_SUPERADMIN_ID", 0))
 
 # Global variables
 stations = ["cream"]
-
 
 async def start_command_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
@@ -44,7 +43,6 @@ async def start_command_handler(update: Update, context: ContextTypes.DEFAULT_TY
             resize_keyboard=True,
         ),
     )
-
 
 # Handlers
 async def text_message_handler(
