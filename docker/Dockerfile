@@ -21,4 +21,4 @@ COPY . .
 EXPOSE 8080
 
 # Run the bot
-CMD ["python", "main.py"]
+ENTRYPOINT ["python", "main.py"]
