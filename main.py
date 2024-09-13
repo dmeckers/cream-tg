@@ -2,7 +2,14 @@ import os
 import logging
 from pathlib import Path
 import requests
-from telegram import Update, KeyboardButton, ReplyKeyboardMarkup, WebAppInfo
+from telegram import (
+    Update,
+    KeyboardButton,
+    ReplyKeyboardMarkup,
+    WebAppInfo,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+)
 from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
@@ -29,15 +36,16 @@ BOT_SUPERADMIN_ID = int(os.getenv("BOT_SUPERADMIN_ID", 0))
 BOT_WORKER_EMAIL = os.getenv("BOT_WORKER_EMAIL", "cream_radio_bot")
 BOT_WORKER_PASSWORD = os.getenv("BOT_WORKER_PASSWORD", "cream_radio_bot")
 stations = ["cream"]
+print("Bot worker email: ", BOT_WORKER_EMAIL)
+print("Bot web app url: ", WEB_APP_URL)
 
 
 async def defaultGreetings(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = [[InlineKeyboardButton("Open Web App", web_app=WebAppInfo(WEB_APP_URL))]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text(
         "Welcome to Cream Radio! Hit the button below to open the radio.",
-        reply_markup=ReplyKeyboardMarkup(
-            [[KeyboardButton("Open Web App", web_app=WebAppInfo(WEB_APP_URL))]],
-            resize_keyboard=True,
-        ),
+        reply_markup=reply_markup,
     )
 
 

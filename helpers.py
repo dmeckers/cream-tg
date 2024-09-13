@@ -3,8 +3,6 @@ from time import sleep
 import requests
 from pathlib import Path
 from urllib.parse import urlparse
-import keyring
-import keyrings.alt
 
 
 class TgBotHelpers:
